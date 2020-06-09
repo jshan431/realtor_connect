@@ -4,6 +4,24 @@ const jwt = require('jsonwebtoken');
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
 
+const getUser = async (req, res, next) => {
+  // Search DB
+  let user;
+  try {
+    // req.user exists because of the auth middleware
+    user = await User.findById(req.userData.userId).select('-password');
+
+  } catch(err) {
+    console.log('I am in the catch')
+    const error = new HttpError(
+      'Fetching users failed, please try again later.',
+      500
+    );
+    return next(error);
+  }
+  res.json(user);
+}
+
 const getUsers = async (req, res, next) => {
   // Search DB
   let users;
@@ -179,5 +197,6 @@ const login = async (req, res, next) => {
 };
 
 exports.getUsers = getUsers;
+exports.getUser = getUser;
 exports.signup = signup;
 exports.login = login;

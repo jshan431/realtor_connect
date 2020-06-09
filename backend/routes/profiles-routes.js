@@ -4,6 +4,10 @@ const checkAuth = require('../middleware/check-auth');
 const profilesController = require('../controllers/profiles-controllers');
 const { check } = require('express-validator');
 
+router.get('/', profilesController.getAllProfiles);
+
+router.get('/user/:user_id', profilesController.getProfileById);
+
 // middleware that checks for valid token. Subsequent routes cannot be reached without valid token
 router.use(checkAuth);
 

@@ -28,6 +28,33 @@ const getMe = async (req, res, next) => {
   };
 };
 
+const getAllProfiles = async (req, res, next) => {
+  let profiles
+  try {
+    profiles = await Profile.find().populate('creator', ['name', 'image']);
+  } catch (err) {
+    const error = new HttpError(
+      'Searching profiles failed, please try again. Caught in the catch',
+      500
+    );
+  }
+  res.json(profiles);
+}
+
+const getProfileById = async (req, res, next) => {
+  let profile;
+  try {
+    profile = await Profile.findOne({ creator: req.params.user_id }).populate('creator', ['name', 'image']);
+    if(!profile) return res.status(400).json({ msg: 'There is no profile for this user'});
+  } catch (err) {
+    const error = new HttpError(
+      'Searching profile failed, please try again. Caught in the catch',
+      500
+    );
+  }
+  res.json(profile);
+}
+
 const createProfile = async (req, res, next) => {
   //look at req and check if any validation errors were detected
   const errors = validationResult(req);
@@ -223,7 +250,8 @@ const deleteProfile = async (req, res, next) => {
     sess.startTransaction();
     await profile.remove({session: sess});
     profile.creator.profile = null;   // we are able to do this because of populated the place object
-    await profile.creator.save({session: sess});
+    //await profile.creator.save({session: sess});
+    await profile.creator.remove({session: sess})
     await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
@@ -445,3 +473,5 @@ exports.updateProfileExperience = updateProfileExperience;
 exports.deleteProfileExperience = deleteProfileExperience;
 exports.updateProfileEducation = updateProfileEducation;
 exports.deleteProfileEducation = deleteProfileEducation;
+exports.getAllProfiles = getAllProfiles;
+exports.getProfileById = getProfileById;

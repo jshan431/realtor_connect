@@ -6,6 +6,7 @@ const placesRoutes = require('./routes/places-routes');
 const profilesRoutes = require('./routes/profiles-routes');
 const postsRoutes = require('./routes/posts-routes');
 const HttpError = require('./models/http-error');
+const cors = require('cors');
 const app = express();
 
 //parse the body of incoming request of JSON format and convert it to JS
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(cors());
 
 // routing middlewares
 app.use('/api/users', usersRoutes);

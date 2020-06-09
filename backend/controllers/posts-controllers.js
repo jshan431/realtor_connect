@@ -65,7 +65,7 @@ const getAllPosts = async (req, res, next) => {
     );
     return next(error);
   }
-  res.status(201).json({ posts });
+  res.status(201).json(posts);
 }
 
 const getPostById = async (req, res, next) => {
@@ -94,8 +94,7 @@ const getPostById = async (req, res, next) => {
     return next(error);
   }
 
-  //turn our given mongoose object back to a JS object.
-  res.json({ post: post.toObject({ getters: true }) });
+  res.json(post);
 
 };
 

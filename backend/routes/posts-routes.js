@@ -4,6 +4,17 @@ const { check } = require('express-validator');
 const checkAuth  = require('../middleware/check-auth');
 const postsController = require('../controllers/posts-controllers');
 
+// @route  GET api/posts
+// @desc   Get all posts
+// @access Private   -    might change to Public instead
+router.get('/', postsController.getAllPosts);
+
+
+// @route  GET api/posts/:id
+// @desc   Get post by id
+// @access Private   -    might change to Public instead
+router.get('/:pid', postsController.getPostById);
+
 // middleware that checks for valid token. Subsequent routes cannot be reached without valid token
 router.use(checkAuth);
 
@@ -16,18 +27,6 @@ router.post('/',
   ],
   postsController.createPost
 );
-
-
-// @route  GET api/posts
-// @desc   Get all posts
-// @access Private   -    might change to Public instead
-router.get('/', postsController.getAllPosts);
-
-
-// @route  GET api/posts/:id
-// @desc   Get post by id
-// @access Private   -    might change to Public instead
-router.get('/:pid', postsController.getPostById);
 
 // @route  DELETE api/posts/:id
 // @desc   Delete post by id
